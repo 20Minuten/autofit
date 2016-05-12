@@ -18,7 +18,7 @@ function doiFrameAutofitter() {
     } else {
         var dataObject = {
             "type": "autofit",
-            "contentHeight": $("body").height(),
+            "contentHeight": $("body").outerHeight(),
             "src": document.location.href
         };
         parent.postMessage(dataObject, '*');
