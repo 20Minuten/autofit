@@ -1,14 +1,14 @@
 /********************************************************
  * iFrame Autofit
  * by 20 Minuten AG | pascal.zirn@20minuten.ch
- * and ben
+ * and ben and juri
  *******************************************************/
+
+var iframeId;
 
 function doiFrameAutofitter() {
     'use strict';
-
     var script;
-
     if(!window.jQuery) {
         script = document.createElement('script');
         script.src = 'https://code.jquery.com/jquery-1.11.2.min.js';
@@ -19,14 +19,21 @@ function doiFrameAutofitter() {
         var dataObject = {
             "type": "autofit",
             "contentHeight": $("body").outerHeight(),
-            "src": document.location.href
+            "src": document.location.href,
+            "iframeId": iframeId
         };
         parent.postMessage(dataObject, '*');
     }
 }
-
 function setUpiFrameAutofitter() {
-    setInterval(doiFrameAutofitter, 200);
+    setInterval(doiFrameAutofitter, 500);
+}
+function receiveParentMessage(e) {
+    iframeId = e.data.iframeId;
 }
 
+document.removeEventListener("DOMContentLoaded", setUpiFrameAutofitter);
 document.addEventListener("DOMContentLoaded", setUpiFrameAutofitter);
+
+window.removeEventListener("message", receiveParentMessage);
+window.addEventListener("message", receiveParentMessage);
