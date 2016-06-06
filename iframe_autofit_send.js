@@ -29,7 +29,9 @@ function setUpiFrameAutofitter() {
     setInterval(doiFrameAutofitter, 500);
 }
 function receiveParentMessage(e) {
-    iframeId = e.data.iframeId;
+    if(e.data.iframeId) {
+        iframeId = e.data.iframeId;
+    }
 }
 
 document.removeEventListener("DOMContentLoaded", setUpiFrameAutofitter);
