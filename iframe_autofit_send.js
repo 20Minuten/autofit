@@ -4,38 +4,45 @@
  * and ben and juri
  *******************************************************/
 
-var iframeId;
-
-function doiFrameAutofitter() {
+(function() {
     'use strict';
-    var script;
-    if(!window.jQuery) {
-        script = document.createElement('script');
-        script.src = 'https://code.jquery.com/jquery-1.11.2.min.js';
-        script.type = 'text/javascript';
-        document.getElementsByTagName('head')[0].appendChild(script);
-        setTimeout(doiFrameAutofitter, 800);
-    } else {
+
+    var iframeId;
+
+    // Analogue to jQueries height() function
+    function getContentHeight() {
+        return Math.max(
+            document.body.scrollHeight, document.documentElement.scrollHeight,
+            document.body.offsetHeight, document.documentElement.offsetHeight,
+            document.body.clientHeight, document.documentElement.clientHeight
+        );
+    }
+
+    function doiFrameAutofitter() {
         var dataObject = {
-            "type": "autofit",
-            "contentHeight": $("body").outerHeight(),
-            "src": document.location.href,
-            "iframeId": iframeId
+            'type': 'autofit',
+            'contentHeight': getContentHeight(),
+            'src': document.location.href,
+            'iframeId': iframeId
         };
+
         parent.postMessage(dataObject, '*');
-    }
-}
-function setUpiFrameAutofitter() {
-    setInterval(doiFrameAutofitter, 500);
-}
-function receiveParentMessage(e) {
-    if(e.data.iframeId) {
-        iframeId = e.data.iframeId;
-    }
-}
 
-document.removeEventListener("DOMContentLoaded", setUpiFrameAutofitter);
-document.addEventListener("DOMContentLoaded", setUpiFrameAutofitter);
+    }
 
-window.removeEventListener("message", receiveParentMessage);
-window.addEventListener("message", receiveParentMessage);
+    function setUpiFrameAutofitter() {
+        setInterval(doiFrameAutofitter, 500);
+    }
+
+    function receiveParentMessage(e) {
+        if (e.data.iframeId) {
+            iframeId = e.data.iframeId;
+        }
+    }
+
+    document.removeEventListener('DOMContentLoaded', setUpiFrameAutofitter);
+    document.addEventListener('DOMContentLoaded', setUpiFrameAutofitter);
+
+    window.removeEventListener('message', receiveParentMessage);
+    window.addEventListener('message', receiveParentMessage);
+})();
