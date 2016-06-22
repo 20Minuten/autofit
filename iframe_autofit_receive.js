@@ -1,28 +1,38 @@
 (function() {
+    var autofitIframeCounter = 0,
+        autofitIframes = $("iframe.autofit"),
+        autofitIframesLength = $("iframe.autofit").length;
+
     var onIframeContentResize = function (e) {
+        var messageObject = e.data,
+            currentIframeId,
+            nuHeight;
 
-        var autofitIframes = document.querySelectorAll('iframe.autofit'),
-            messageObject = e.data,
-            nuHeight,
-            iframesrc;
-
-        if(messageObject.type === 'autofit') {
-            for(var i = 0; i < autofitIframes.length; i++) {
-                if(domainCheck(autofitIframes[i]) === true) {
-                    iframesrc = autofitIframes[i].contentWindow.location.href;
-                } else {
-                    iframesrc = autofitIframes[i].src;
+        if(messageObject.type === "autofit") {
+            if(autofitIframeCounter < autofitIframesLength) {
+                if(messageObject.src && !$('iframe.autofit[src="' + messageObject.src + '"]').attr("data-id")) {
+                    $('iframe.autofit[src="' + messageObject.src + '"]').attr("data-id", "autofit-" + autofitIframeCounter);
+                    $('iframe.autofit[src="' + messageObject.src + '"]')[0].contentWindow.postMessage({"iframeId": "autofit-" + autofitIframeCounter}, "*");
+                    autofitIframeCounter++;
                 }
-                if(iframesrc === messageObject.src) {
-                    nuHeight = messageObject.contentHeight;
-                    if(nuHeight !== autofitIframes[i].getAttribute('height')) {
-                        autofitIframes[i].setAttribute('height', nuHeight);
+            } else {
+                for(var i = 0; i < autofitIframesLength; i++) {
+                    currentIframeId = autofitIframes[i].getAttribute("data-id");
+                    if(messageObject.iframeId) {
+                        if(currentIframeId === messageObject.iframeId) {
+                            nuHeight = messageObject.contentHeight;
+                            if(nuHeight !== autofitIframes[i].getAttribute("height")) {
+                                autofitIframes[i].setAttribute("height", nuHeight);
+                            }
+                        }
+                    } else {
+                        autofitIframes[i].contentWindow.postMessage({"iframeId": currentIframeId}, "*");
                     }
                 }
             }
         }
     };
-    window.addEventListener('message', onIframeContentResize);
+    window.addEventListener("message", onIframeContentResize);
 }());
 
 // check if the src of iframe is crossdomain
