@@ -1,37 +1,24 @@
 /********************************************************
- * iFrame Autofit
- * by 20 Minuten AG | pascal.zirn@20minuten.ch
- * and ben and juri
+ * iFrame Autofit send
+ * by 20 Minuten AG | Pascal, Ben and Juri
  *******************************************************/
 
 (function() {
-    'use strict';
-
+    "use strict";
     var iframeId;
 
-    // Analogue to jQueries height() function
-    function getContentHeight() {
-        return Math.max(
-            document.body.scrollHeight, document.documentElement.scrollHeight,
-            document.body.offsetHeight, document.documentElement.offsetHeight,
-            document.body.clientHeight, document.documentElement.clientHeight
-        );
+    function setUpiFrameAutofitter() {
+        setInterval(doiFrameAutofitter, 500);
     }
 
     function doiFrameAutofitter() {
         var dataObject = {
-            'type': 'autofit',
-            'contentHeight': getContentHeight(),
-            'src': document.location.href,
-            'iframeId': iframeId
+            "type": "autofit",
+            "contentHeight": document.body.offsetHeight,
+            "src": document.location.href,
+            "iframeId": iframeId
         };
-
-        parent.postMessage(dataObject, '*');
-
-    }
-
-    function setUpiFrameAutofitter() {
-        setInterval(doiFrameAutofitter, 500);
+        parent.postMessage(dataObject, "*");
     }
 
     function receiveParentMessage(e) {
@@ -40,9 +27,9 @@
         }
     }
 
-    document.removeEventListener('DOMContentLoaded', setUpiFrameAutofitter);
-    document.addEventListener('DOMContentLoaded', setUpiFrameAutofitter);
+    document.removeEventListener("DOMContentLoaded", setUpiFrameAutofitter);
+    document.addEventListener("DOMContentLoaded", setUpiFrameAutofitter);
 
-    window.removeEventListener('message', receiveParentMessage);
-    window.addEventListener('message', receiveParentMessage);
+    window.removeEventListener("message", receiveParentMessage);
+    window.addEventListener("message", receiveParentMessage);
 })();

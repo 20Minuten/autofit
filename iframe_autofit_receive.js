@@ -1,7 +1,12 @@
+/********************************************************
+ * iFrame Autofit receive
+ * by 20 Minuten AG | Pascal, Ben and Juri
+ *******************************************************/
+
 (function() {
     var autofitIframeCounter = 0,
-        autofitIframes = $("iframe.autofit"),
-        autofitIframesLength = $("iframe.autofit").length;
+        autofitIframes = document.querySelectorAll("iframe.autofit"),
+        autofitIframesLength = autofitIframes.length;
 
     var onIframeContentResize = function (e) {
         var messageObject = e.data,
@@ -10,9 +15,9 @@
 
         if(messageObject.type === "autofit") {
             if(autofitIframeCounter < autofitIframesLength) {
-                if(messageObject.src && !$('iframe.autofit[src="' + messageObject.src + '"]').attr("data-id")) {
-                    $('iframe.autofit[src="' + messageObject.src + '"]').attr("data-id", "autofit-" + autofitIframeCounter);
-                    $('iframe.autofit[src="' + messageObject.src + '"]')[0].contentWindow.postMessage({"iframeId": "autofit-" + autofitIframeCounter}, "*");
+                if(messageObject.src && !document.querySelector('iframe.autofit[src="' + messageObject.src + '"]').getAttribute("data-id")) {
+                    document.querySelector('iframe.autofit[src="' + messageObject.src + '"]').setAttribute("data-id", "autofit-" + autofitIframeCounter);
+                    document.querySelector('iframe.autofit[src="' + messageObject.src + '"]').contentWindow.postMessage({"iframeId": "autofit-" + autofitIframeCounter}, "*");
                     autofitIframeCounter++;
                 }
             } else {
@@ -32,17 +37,6 @@
             }
         }
     };
+
     window.addEventListener("message", onIframeContentResize);
 }());
-
-// check if the src of iframe is crossdomain
-function domainCheck(iframe) {
-    var html = null;
-    try {
-        var tempdoc = iframe.contentDocument || iframe.contentWindow.document;
-        html = tempdoc.body.innerHTML;
-    } catch(err) {
-        //do nothing on error
-    }
-    return(html !== null);
-}
