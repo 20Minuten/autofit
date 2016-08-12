@@ -1,6 +1,6 @@
 /********************************************************
  * iFrame Autofit receive
- * by 20 Minuten AG | Pascal, Ben and Juri
+ * by 20 Minuten AG | Mason, Ben and Juri
  *******************************************************/
 
 (function() {
@@ -16,6 +16,7 @@
         if(messageObject.type === "autofit") {
             if(autofitIframeCounter < autofitIframesLength) {
                 if(messageObject.src && !document.querySelector('iframe.autofit[src="' + messageObject.src + '"]').getAttribute("data-id")) {
+                    document.querySelector('iframe.autofit[src="' + messageObject.src + '"]').removeAttribute("height");
                     document.querySelector('iframe.autofit[src="' + messageObject.src + '"]').setAttribute("data-id", "autofit-" + autofitIframeCounter);
                     document.querySelector('iframe.autofit[src="' + messageObject.src + '"]').contentWindow.postMessage({"iframeId": "autofit-" + autofitIframeCounter}, "*");
                     autofitIframeCounter++;

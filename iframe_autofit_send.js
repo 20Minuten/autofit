@@ -1,6 +1,6 @@
 /********************************************************
  * iFrame Autofit send
- * by 20 Minuten AG | Pascal, Ben and Juri
+ * by 20 Minuten AG | Mason, Ben and Juri
  *******************************************************/
 
 (function() {
@@ -12,9 +12,14 @@
     }
 
     function doiFrameAutofitter() {
+        var contentHeight = Math.max(
+            document.body.scrollHeight, document.documentElement.scrollHeight,
+            document.body.offsetHeight, document.documentElement.offsetHeight,
+            document.body.clientHeight, document.documentElement.clientHeight
+        );
         var dataObject = {
             "type": "autofit",
-            "contentHeight": document.body.offsetHeight,
+            "contentHeight": contentHeight,
             "src": document.location.href,
             "iframeId": iframeId
         };
@@ -27,9 +32,6 @@
         }
     }
 
-    document.removeEventListener("DOMContentLoaded", setUpiFrameAutofitter);
     document.addEventListener("DOMContentLoaded", setUpiFrameAutofitter);
-
-    window.removeEventListener("message", receiveParentMessage);
     window.addEventListener("message", receiveParentMessage);
 })();
