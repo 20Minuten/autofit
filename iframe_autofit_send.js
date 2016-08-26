@@ -17,7 +17,7 @@
             heightDiff = documentHeight - bodyHeight;
 
         if(bodyHeight < documentHeight && heightDiff > 20) {
-            return document.body.offsetHeight;
+            return bodyHeight;
         } else {
             return documentHeight;
         }
