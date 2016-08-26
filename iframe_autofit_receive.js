@@ -8,17 +8,18 @@
         autofitIframes = document.querySelectorAll("iframe.autofit"),
         autofitIframesLength = autofitIframes.length;
 
-    var onIframeContentResize = function (e) {
+    var onIframeContentResize = function(e) {
         var messageObject = e.data,
             currentIframeId,
-            nuHeight;
+            foundIframe,
+            contentHeight;
 
         if(messageObject.type === "autofit") {
             if(autofitIframeCounter < autofitIframesLength) {
                 if(messageObject.src && !document.querySelector('iframe.autofit[src="' + messageObject.src + '"]').getAttribute("data-id")) {
-                    document.querySelector('iframe.autofit[src="' + messageObject.src + '"]').removeAttribute("height");
-                    document.querySelector('iframe.autofit[src="' + messageObject.src + '"]').setAttribute("data-id", "autofit-" + autofitIframeCounter);
-                    document.querySelector('iframe.autofit[src="' + messageObject.src + '"]').contentWindow.postMessage({"iframeId": "autofit-" + autofitIframeCounter}, "*");
+                    foundIframe = document.querySelector('iframe.autofit[src="' + messageObject.src + '"]');
+                    foundIframe.setAttribute("data-id", "autofit-" + autofitIframeCounter);
+                    foundIframe.contentWindow.postMessage({"iframeId": "autofit-" + autofitIframeCounter}, "*");
                     autofitIframeCounter++;
                 }
             } else {
@@ -26,9 +27,9 @@
                     currentIframeId = autofitIframes[i].getAttribute("data-id");
                     if(messageObject.iframeId) {
                         if(currentIframeId === messageObject.iframeId) {
-                            nuHeight = messageObject.contentHeight;
-                            if(nuHeight !== autofitIframes[i].getAttribute("height")) {
-                                autofitIframes[i].setAttribute("height", nuHeight);
+                            contentHeight = messageObject.contentHeight;
+                            if(contentHeight !== autofitIframes[i].getAttribute("height")) {
+                                autofitIframes[i].setAttribute("height", contentHeight);
                             }
                         }
                     } else {

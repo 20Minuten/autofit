@@ -7,19 +7,30 @@
     "use strict";
     var iframeId;
 
+    function getHeight() {
+        var documentHeight = Math.max(
+                document.body.scrollHeight, document.documentElement.scrollHeight,
+                document.body.offsetHeight, document.documentElement.offsetHeight,
+                document.body.clientHeight, document.documentElement.clientHeight
+            ),
+            bodyHeight = document.body.offsetHeight,
+            heightDiff = documentHeight - bodyHeight;
+
+        if(bodyHeight < documentHeight && heightDiff > 20) {
+            return document.body.offsetHeight;
+        } else {
+            return documentHeight;
+        }
+    }
+
     function setUpiFrameAutofitter() {
-        setInterval(doiFrameAutofitter, 500);
+        setInterval(doiFrameAutofitter, 200);
     }
 
     function doiFrameAutofitter() {
-        var contentHeight = Math.max(
-            document.body.scrollHeight, document.documentElement.scrollHeight,
-            document.body.offsetHeight, document.documentElement.offsetHeight,
-            document.body.clientHeight, document.documentElement.clientHeight
-        );
         var dataObject = {
             "type": "autofit",
-            "contentHeight": contentHeight,
+            "contentHeight": getHeight(),
             "src": document.location.href,
             "iframeId": iframeId
         };
@@ -27,7 +38,7 @@
     }
 
     function receiveParentMessage(e) {
-        if (e.data.iframeId) {
+        if(e.data.iframeId) {
             iframeId = e.data.iframeId;
         }
     }
