@@ -10,7 +10,7 @@
 
     var getAutofitIframes = function() {
         autofitIframeCounter = 0;
-        autofitIframes = document.querySelectorAll("iframe.autofit"),
+        autofitIframes = document.querySelectorAll("iframe.autofit");
         autofitIframesLength = autofitIframes.length;
     };
 
