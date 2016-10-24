@@ -4,35 +4,42 @@
  *******************************************************/
 
 (function() {
-    var autofitIframeCounter = 0,
+    var autofitIframeCounter,
+        autofitIframes,
+        autofitIframesLength;
+
+    var getAutofitIframes = function() {
+        autofitIframeCounter = 0;
         autofitIframes = document.querySelectorAll("iframe.autofit"),
         autofitIframesLength = autofitIframes.length;
+    };
 
     var onIframeContentResize = function(e) {
         var messageObject = e.data,
             currentIframeId,
-            foundIframe,
+            setIframe,
             contentHeight;
 
         if(messageObject.type === "autofit") {
             if(autofitIframeCounter < autofitIframesLength) {
-                if(messageObject.src && !document.querySelector('iframe.autofit[src="' + messageObject.src + '"]').getAttribute("data-id")) {
-                    foundIframe = document.querySelector('iframe.autofit[src="' + messageObject.src + '"]');
-                    foundIframe.setAttribute("data-id", "autofit-" + autofitIframeCounter);
-                    foundIframe.contentWindow.postMessage({"iframeId": "autofit-" + autofitIframeCounter}, "*");
-                    autofitIframeCounter++;
+                for(var i = 0; i < autofitIframesLength; i++) {
+                    if(autofitIframes[i].src === messageObject.src && !autofitIframes[i].getAttribute("data-id")) {
+                        autofitIframes[i].setAttribute("data-id", "autofit-" + autofitIframeCounter);
+                        autofitIframes[i].contentWindow.postMessage({"iframeId": "autofit-" + autofitIframeCounter}, "*");
+                        autofitIframeCounter++;
+                        return;
+                    }
                 }
             } else {
-                for(var i = 0; i < autofitIframesLength; i++) {
-                    currentIframeId = autofitIframes[i].getAttribute("data-id");
-                    if(messageObject.iframeId) {
-                        if(currentIframeId === messageObject.iframeId) {
-                            contentHeight = messageObject.contentHeight;
-                            if(contentHeight !== autofitIframes[i].getAttribute("height")) {
-                                autofitIframes[i].setAttribute("height", contentHeight);
-                            }
-                        }
-                    } else {
+                if(messageObject.iframeId) {
+                    setIframe = document.querySelector('iframe.autofit[data-id="' + messageObject.iframeId + '"]');
+                    contentHeight = messageObject.contentHeight;
+                    if(contentHeight !== setIframe.getAttribute("height")) {
+                        setIframe.setAttribute("height", contentHeight);
+                    }
+                } else {
+                    for(var i = 0; i < autofitIframesLength; i++) {
+                        currentIframeId = autofitIframes[i].getAttribute("data-id");
                         autofitIframes[i].contentWindow.postMessage({"iframeId": currentIframeId}, "*");
                     }
                 }
@@ -40,5 +47,6 @@
         }
     };
 
+    document.addEventListener("DOMContentLoaded", getAutofitIframes);
     window.addEventListener("message", onIframeContentResize);
 }());

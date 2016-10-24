@@ -4,8 +4,9 @@
  *******************************************************/
 
 (function() {
-    "use strict";
-    var iframeId;
+    var iframeId,
+        lastContentHeight,
+        currContentHeight;
 
     function getHeight() {
         var documentHeight = Math.max(
@@ -28,17 +29,28 @@
     }
 
     function doiFrameAutofitter() {
-        var dataObject = {
-            "type": "autofit",
-            "contentHeight": getHeight(),
-            "src": document.location.href,
-            "iframeId": iframeId
-        };
-        parent.postMessage(dataObject, "*");
+        if(!iframeId) {
+            var dataObject = {
+                "type": "autofit",
+                "src": document.location.href
+            };
+            parent.postMessage(dataObject, "*");
+        } else {
+            currContentHeight = getHeight();
+            if(currContentHeight !== lastContentHeight) {
+                var dataObject = {
+                    "type": "autofit",
+                    "iframeId": iframeId,
+                    "contentHeight": currContentHeight
+                };
+                parent.postMessage(dataObject, "*");
+                lastContentHeight = currContentHeight;
+            }
+        }
     }
 
     function receiveParentMessage(e) {
-        if(e.data.iframeId) {
+        if(e.data.iframeId && !iframeId) {
             iframeId = e.data.iframeId;
         }
     }
