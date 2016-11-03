@@ -38,9 +38,9 @@
                         setIframe.setAttribute("height", contentHeight);
                     }
                 } else {
-                    for(var i = 0; i < autofitIframesLength; i++) {
-                        currentIframeId = autofitIframes[i].getAttribute("data-id");
-                        autofitIframes[i].contentWindow.postMessage({"iframeId": currentIframeId}, "*");
+                    for(var j = 0; j < autofitIframesLength; j++) {
+                        currentIframeId = autofitIframes[j].getAttribute("data-id");
+                        autofitIframes[j].contentWindow.postMessage({"iframeId": currentIframeId}, "*");
                     }
                 }
             }
