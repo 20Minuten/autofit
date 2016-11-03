@@ -6,7 +6,8 @@
 (function() {
     var iframeId,
         lastContentHeight,
-        currContentHeight;
+        currContentHeight,
+        currWindowHeight;
 
     function getHeight() {
         var documentHeight = Math.max(
@@ -29,16 +30,18 @@
     }
 
     function doiFrameAutofitter() {
+        var dataObject = {};
         if(!iframeId) {
-            var dataObject = {
+            dataObject = {
                 "type": "autofit",
                 "src": document.location.href
             };
             parent.postMessage(dataObject, "*");
         } else {
             currContentHeight = getHeight();
-            if(currContentHeight !== lastContentHeight) {
-                var dataObject = {
+            currWindowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+            if(currContentHeight !== lastContentHeight && currWindowHeight !== screen.height) {
+                dataObject = {
                     "type": "autofit",
                     "iframeId": iframeId,
                     "contentHeight": currContentHeight
@@ -50,7 +53,7 @@
     }
 
     function receiveParentMessage(e) {
-        if(e.data.iframeId && !iframeId) {
+        if(e.data.iframeId && e.data.iframeId !== iframeId) {
             iframeId = e.data.iframeId;
         }
     }
