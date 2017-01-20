@@ -1,7 +1,7 @@
 /********************************************************
- * iFrame Autofit send
- * by 20 Minuten AG | Mason, Ben and Juri
- *******************************************************/
+* iFrame Autofit send
+* by 20 Minuten AG | Mason, Ben and Juri
+*******************************************************/
 
 (function() {
     var iframeId,
@@ -25,19 +25,9 @@
         }
     }
 
-    function setUpiFrameAutofitter() {
-        setInterval(doiFrameAutofitter, 200);
-    }
-
-    function doiFrameAutofitter() {
-        var dataObject = {};
-        if(!iframeId) {
-            dataObject = {
-                "type": "autofit",
-                "src": document.location.href
-            };
-            parent.postMessage(dataObject, "*");
-        } else {
+    function autofitCheck() {
+        var dataObject;
+        if(iframeId) {
             currContentHeight = getHeight();
             currWindowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
             if(currContentHeight !== lastContentHeight && currWindowHeight !== screen.height) {
@@ -49,15 +39,25 @@
                 parent.postMessage(dataObject, "*");
                 lastContentHeight = currContentHeight;
             }
+        } else {
+            dataObject = {
+                "type": "autofit"
+            };
+            parent.postMessage(dataObject, "*");
         }
     }
 
-    function receiveParentMessage(e) {
+    function setupAutofit() {
+        autofitCheck();
+        setInterval(autofitCheck, 200);
+    }
+
+    function setIframeId(e) {
         if(e.data.iframeId && e.data.iframeId !== iframeId) {
             iframeId = e.data.iframeId;
         }
     }
 
-    document.addEventListener("DOMContentLoaded", setUpiFrameAutofitter);
-    window.addEventListener("message", receiveParentMessage);
-})();
+    document.addEventListener("DOMContentLoaded", setupAutofit);
+    window.addEventListener("message", setIframeId);
+}());
