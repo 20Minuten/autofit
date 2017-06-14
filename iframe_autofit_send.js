@@ -15,10 +15,9 @@
                 document.body.offsetHeight, document.documentElement.offsetHeight,
                 document.body.clientHeight, document.documentElement.clientHeight
             ),
-            bodyHeight = document.body.offsetHeight,
-            heightDiff = documentHeight - bodyHeight;
+            bodyHeight = Math.max(document.body.offsetHeight, document.documentElement.offsetHeight);
 
-        if(bodyHeight < documentHeight && heightDiff > 20) {
+        if(bodyHeight < documentHeight) {
             return bodyHeight;
         } else {
             return documentHeight;
@@ -48,6 +47,7 @@
     }
 
     function setupAutofit() {
+        document.body.style.overflowY = "hidden";
         autofitCheck();
         setInterval(autofitCheck, 200);
     }
