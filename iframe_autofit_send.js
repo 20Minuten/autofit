@@ -49,11 +49,6 @@
     function setupCSS() {
         document.documentElement.style.overflowY = "hidden";
         document.body.style.overflowY = "hidden";
-
-        var styleTag = document.createElement("style");
-        styleTag.type = "text/css";
-        styleTag.innerHTML = "body * { overflow-y: auto; }";
-        document.head.appendChild(styleTag);
     }
 
     function setupAutofit() {
