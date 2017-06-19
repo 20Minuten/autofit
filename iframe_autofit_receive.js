@@ -33,8 +33,8 @@
                 setIframe = document.querySelector('iframe.autofit[data-id="' + messageObject.iframeId + '"]');
                 contentHeight = messageObject.contentHeight;
 
-                if(contentHeight !== setIframe.getAttribute("height")) {
-                    setIframe.setAttribute("height", contentHeight);
+                if(contentHeight !== parseInt(setIframe.style.height)) {
+                    setIframe.style.height = contentHeight + "px";
                 }
             } else {
                 for(var j = 0; j < autofitIframesLength; j++) {
