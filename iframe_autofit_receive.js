@@ -1,6 +1,6 @@
 /********************************************************
 * iFrame Autofit receive
-* by 20 Minuten AG | Mason, Ben and Juri
+* by Tamedia AG | Ben and Juri
 *******************************************************/
 
 (function() {
