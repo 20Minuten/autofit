@@ -52,6 +52,6 @@ We have defined some best practices which need to be followed to ensure that the
 
 * Always declare a DOCTYPE on top.
 * Don't use margins on &lt;html&gt;.
-* Don't position <html> and &lt;body&gt; absolutely.
+* Don't position &lt;html&gt; and &lt;body&gt; absolutely.
 * Don't set a fix height on &lt;html&gt; and &lt;body&gt;.
 * Don't use calculated height (CSS calc function) on &lt;html&gt; and &lt;body&gt;.
