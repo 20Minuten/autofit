@@ -14,6 +14,7 @@
 
         for(var i = 0; i < autofitIframesLength; i++) {
             autofitIframes[i].setAttribute("data-id", "autofit-" + i);
+            autofitIframes[i].setAttribute("allowfullscreen", "");
             autofitIframes[i].contentWindow.postMessage({"iframeId": "autofit-" + i}, "*");
 
             if(i === autofitIframesLength - 1) {

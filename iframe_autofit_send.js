@@ -6,8 +6,7 @@
 (function() {
     var iframeId,
         lastContentHeight,
-        currContentHeight,
-        currWindowHeight;
+        currContentHeight;
 
     function getHeight() {
         var documentHeight = Math.max(
@@ -28,8 +27,7 @@
         var dataObject;
         if(iframeId) {
             currContentHeight = getHeight();
-            currWindowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-            if(currContentHeight !== lastContentHeight && currWindowHeight !== screen.height) {
+            if(currContentHeight !== lastContentHeight) {
                 dataObject = {
                     "type": "autofit",
                     "iframeId": iframeId,
@@ -53,8 +51,10 @@
 
     function setupAutofit() {
         setupCSS();
-        autofitCheck();
-        setInterval(autofitCheck, 200);
+        setInterval(function runAutofitCheck() {
+            autofitCheck();
+            return runAutofitCheck;
+        }(), 200);
     }
 
     function setIframeId(e) {
