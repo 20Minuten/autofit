@@ -46,7 +46,9 @@
 
     function setupCSS() {
         document.documentElement.style.overflowY = "hidden";
+        document.documentElement.style.height = "auto";
         document.body.style.overflowY = "hidden";
+        document.body.style.height = "auto";
     }
 
     function setupAutofit() {
@@ -54,7 +56,7 @@
         setInterval(function runAutofitCheck() {
             autofitCheck();
             return runAutofitCheck;
-        }(), 200);
+        }(), 10);
     }
 
     function setIframeId(e) {
@@ -63,6 +65,12 @@
         }
     }
 
-    document.addEventListener("DOMContentLoaded", setupAutofit);
-    window.addEventListener("message", setIframeId);
+    function shouldRun() {
+        return window.self !== window.parent;
+    }
+
+    if(shouldRun()) {
+        document.addEventListener("DOMContentLoaded", setupAutofit);
+        window.addEventListener("message", setIframeId);
+    }
 }());
