@@ -1,51 +1,98 @@
-/********************************************************
-* iFrame Autofit receive
-* by Tamedia AG | Ben and Juri
-*******************************************************/
+/**********************************************************
+* iframe autofit receive
+* by Tamedia AG | Jurica "Juri" Lepur
+**********************************************************/
 
 (function() {
     var autofitIframes,
-        autofitIframesLength,
-        autofitIsReady = false;
+        autofitIsReady = false,
+        iframeIdList = [];
 
-    function setupAutofit() {
-        autofitIframes = document.querySelectorAll("iframe.autofit");
-        autofitIframesLength = autofitIframes.length;
+    function setIframeId() {
+        var id = "autofit_" + Math.random().toString(36).substr(2, 8);
 
-        for(var i = 0; i < autofitIframesLength; i++) {
-            autofitIframes[i].setAttribute("data-id", "autofit-" + i);
-            autofitIframes[i].setAttribute("allowfullscreen", "");
-            autofitIframes[i].contentWindow.postMessage({"iframeId": "autofit-" + i}, "*");
-
-            if(i === autofitIframesLength - 1) {
-                autofitIsReady = true;
-            }
+        if(iframeIdList.indexOf(id) === -1) {
+            iframeIdList.push(id);
+        } else {
+            setIframeId();
         }
+        return id;
     }
 
     function runAutofit(e) {
-        var messageObject = e.data,
-            currentIframeId,
-            setIframe,
-            contentHeight;
+        var messageObject = e.data;
 
         if(messageObject.type === "autofit" && autofitIsReady === true) {
             if(messageObject.iframeId) {
-                setIframe = document.querySelector('iframe.autofit[data-id="' + messageObject.iframeId + '"]');
-                contentHeight = messageObject.contentHeight;
+                var setIframe = document.querySelector('iframe.autofit[data-id="' + messageObject.iframeId + '"]'),
+                    contentHeight = messageObject.contentHeight;
 
                 if(contentHeight !== parseInt(setIframe.style.height)) {
                     setIframe.style.height = contentHeight + "px";
                 }
             } else {
-                for(var j = 0; j < autofitIframesLength; j++) {
-                    currentIframeId = autofitIframes[j].getAttribute("data-id");
-                    autofitIframes[j].contentWindow.postMessage({"iframeId": currentIframeId}, "*");
+                for(var i = 0; i < autofitIframes.length; i++) {
+                    var currentIframeId = autofitIframes[i].getAttribute("data-id");
+                    autofitIframes[i].contentWindow.postMessage({iframeId: currentIframeId}, "*");
                 }
             }
         }
     }
 
-    document.addEventListener("DOMContentLoaded", setupAutofit);
-    window.addEventListener("message", runAutofit);
+    function destroyAutofit() {
+        if(autofitIframes && autofitIframes.length) {
+            for(var j = 0; j < autofitIframes.length; j++) {
+                autofitIframes[j].removeAttribute("data-id");
+            }
+            autofitIframes = null;
+        }
+        autofitIsReady = false;
+        window.removeEventListener("message", runAutofit);
+    }
+
+    function setupAutofit() {
+        if(document.querySelectorAll("iframe.autofit").length) {
+            var currentIframes = document.querySelectorAll("iframe.autofit"),
+                shouldUpdate = false;
+
+            if(autofitIframes) {
+                if(currentIframes.length === autofitIframes.length) {
+                    for(var k = 0; k < currentIframes.length; k++) {
+                        if(!currentIframes[k].getAttribute("data-id")) {
+                            shouldUpdate = true;
+                            break;
+                        }
+                    }
+                } else {
+                    shouldUpdate = true;
+                }
+            } else {
+                shouldUpdate = true;
+            }
+            if(shouldUpdate) {
+                autofitIsReady = false;
+                autofitIframes = currentIframes;
+
+                for(var l = 0; l < autofitIframes.length; l++) {
+                    if(!autofitIframes[l].getAttribute("data-id")) {
+                        var autofitId = setIframeId();
+                        autofitIframes[l].setAttribute("data-id", autofitId);
+                        autofitIframes[l].setAttribute("allowfullscreen", "");
+                        autofitIframes[l].contentWindow.postMessage({iframeId: autofitId}, "*");
+                    }
+                    if(l === autofitIframes.length - 1) {
+                        autofitIsReady = true;
+                        window.addEventListener("message", runAutofit);
+                    }
+                }
+            }
+        } else {
+            destroyAutofit();
+        }
+    }
+
+    setInterval(function initAutofit() {
+        setupAutofit();
+        return initAutofit;
+    }(), 10);
 }());

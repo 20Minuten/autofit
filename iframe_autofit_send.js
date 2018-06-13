@@ -1,12 +1,11 @@
-/********************************************************
-* iFrame Autofit send
-* by Tamedia AG | Ben and Juri
-*******************************************************/
+/**********************************************************
+* iframe autofit send
+* by Tamedia AG | Jurica "Juri" Lepur
+**********************************************************/
 
 (function() {
     var iframeId,
-        lastContentHeight,
-        currContentHeight;
+        lastContentHeight;
 
     function getHeight() {
         var documentHeight = Math.max(
@@ -26,7 +25,7 @@
     function autofitCheck() {
         var dataObject;
         if(iframeId) {
-            currContentHeight = getHeight();
+            var currContentHeight = getHeight();
             if(currContentHeight !== lastContentHeight) {
                 dataObject = {
                     "type": "autofit",
@@ -70,7 +69,7 @@
     }
 
     if(shouldRun()) {
-        document.addEventListener("DOMContentLoaded", setupAutofit);
+        setupAutofit();
         window.addEventListener("message", setIframeId);
     }
 }());
