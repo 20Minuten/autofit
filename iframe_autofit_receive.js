@@ -22,7 +22,7 @@
     function runAutofit(e) {
         var messageObject = e.data;
 
-        if(messageObject.type === "autofit" && autofitIsReady === true) {
+        if(autofitIsReady && messageObject.type === "autofit") {
             if(messageObject.iframeId) {
                 var setIframe = document.querySelector('iframe.autofit[data-id="' + messageObject.iframeId + '"]'),
                     contentHeight = messageObject.contentHeight;
