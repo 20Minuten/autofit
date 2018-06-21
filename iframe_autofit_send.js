@@ -5,7 +5,8 @@
 
 (function() {
     var iframeId,
-        lastContentHeight;
+        lastContentHeight,
+        autofitIsReady = false;
 
     function getHeight() {
         var documentHeight = Math.max(
@@ -28,16 +29,16 @@
             var currContentHeight = getHeight();
             if(currContentHeight !== lastContentHeight) {
                 dataObject = {
-                    "type": "autofit",
-                    "iframeId": iframeId,
-                    "contentHeight": currContentHeight
+                    type: "autofit",
+                    iframeId: iframeId,
+                    contentHeight: currContentHeight
                 };
                 parent.postMessage(dataObject, "*");
                 lastContentHeight = currContentHeight;
             }
         } else {
             dataObject = {
-                "type": "autofit"
+                type: "autofit"
             };
             parent.postMessage(dataObject, "*");
         }
@@ -51,9 +52,14 @@
     }
 
     function setupAutofit() {
-        setupCSS();
         setInterval(function runAutofitCheck() {
-            autofitCheck();
+            if(document.readyState === "interactive" || document.readyState === "complete") {
+                if(!autofitIsReady) {
+                    autofitIsReady = true;
+                    setupCSS();
+                }
+                autofitCheck();
+            }
             return runAutofitCheck;
         }(), 10);
     }
