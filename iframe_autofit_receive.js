@@ -27,13 +27,13 @@
                 var setIframe = document.querySelector('iframe.autofit[data-id="' + messageObject.iframeId + '"]'),
                     contentHeight = messageObject.contentHeight;
 
-                if(contentHeight !== parseInt(setIframe.style.height)) {
+                if(setIframe && contentHeight !== parseInt(setIframe.style.height)) {
                     setIframe.style.height = contentHeight + "px";
                 }
             } else {
                 for(var i = 0; i < autofitIframes.length; i++) {
                     var currentIframeId = autofitIframes[i].getAttribute("data-id");
-                    autofitIframes[i].contentWindow.postMessage({iframeId: currentIframeId}, "*");
+                    autofitIframes[i].contentWindow.postMessage({type: "setAutofit", iframeId: currentIframeId}, "*");
                 }
             }
         }
@@ -78,7 +78,7 @@
                         var autofitId = setIframeId();
                         autofitIframes[l].setAttribute("data-id", autofitId);
                         autofitIframes[l].setAttribute("allowfullscreen", "");
-                        autofitIframes[l].contentWindow.postMessage({iframeId: autofitId}, "*");
+                        autofitIframes[l].contentWindow.postMessage({type: "setAutofit", iframeId: autofitId}, "*");
                     }
                     if(l === autofitIframes.length - 1) {
                         autofitIsReady = true;

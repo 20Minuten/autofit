@@ -65,7 +65,7 @@
     }
 
     function setIframeId(e) {
-        if(e.data.iframeId && e.data.iframeId !== iframeId) {
+        if(e.data.type && e.data.type === "setAutofit" && e.data.iframeId && e.data.iframeId !== iframeId) {
             iframeId = e.data.iframeId;
         }
     }
