@@ -13,7 +13,7 @@ iframes have their good points and their bad points. Good points include:
 iframes are mostly bad because:
 * We don't know how high the content is going to be.
 
-We have a strong "mobile first" policy at __Tamedia / 20 Minuten__, but that doesn't always
+We have a strong "mobile first" policy at __TX Group / 20 Minuten__, but that doesn't always
 mean that everyone we partner with (advertisers, sponsors, special content providers) is
 as far down the line of the FutureTrain as we are. If they were, they would supply us
 their content in a beautifully encapsulated, responsively designed, nicely namespaced

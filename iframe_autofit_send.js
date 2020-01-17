@@ -1,6 +1,6 @@
 /**********************************************************
 * iframe autofit send
-* by Tamedia AG | Jurica "Juri" Lepur
+* by TX Group AG | Jurica "Juri" Lepur
 **********************************************************/
 
 (function() {
@@ -29,31 +29,31 @@
             var currContentHeight = getHeight();
             if(currContentHeight !== lastContentHeight) {
                 dataObject = {
-                    type: "autofit",
+                    type: 'autofit',
                     iframeId: iframeId,
                     contentHeight: currContentHeight
                 };
-                parent.postMessage(dataObject, "*");
+                parent.postMessage(dataObject, '*');
                 lastContentHeight = currContentHeight;
             }
         } else {
             dataObject = {
-                type: "autofit"
+                type: 'autofit'
             };
-            parent.postMessage(dataObject, "*");
+            parent.postMessage(dataObject, '*');
         }
     }
 
     function setupCSS() {
-        document.documentElement.style.overflowY = "hidden";
-        document.documentElement.style.height = "auto";
-        document.body.style.overflowY = "hidden";
-        document.body.style.height = "auto";
+        document.documentElement.style.overflowY = 'hidden';
+        document.documentElement.style.height = 'auto';
+        document.body.style.overflowY = 'hidden';
+        document.body.style.height = 'auto';
     }
 
     function setupAutofit() {
         setInterval(function runAutofitCheck() {
-            if(document.readyState === "interactive" || document.readyState === "complete") {
+            if(document.readyState === 'interactive' || document.readyState === 'complete') {
                 if(!autofitIsReady) {
                     autofitIsReady = true;
                     setupCSS();
@@ -65,7 +65,7 @@
     }
 
     function setIframeId(e) {
-        if(e.data.type && e.data.type === "setAutofit" && e.data.iframeId && e.data.iframeId !== iframeId) {
+        if(e.data.type && e.data.type === 'setAutofit' && e.data.iframeId && e.data.iframeId !== iframeId) {
             iframeId = e.data.iframeId;
         }
     }
@@ -76,6 +76,6 @@
 
     if(shouldRun()) {
         setupAutofit();
-        window.addEventListener("message", setIframeId);
+        window.addEventListener('message', setIframeId);
     }
 }());
